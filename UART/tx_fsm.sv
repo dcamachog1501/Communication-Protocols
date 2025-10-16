@@ -1,11 +1,16 @@
 module tx_fsm(
     input TX_START,RST,BAUD,
-    output reg SHIFT,LOAD,SEL,TX_BUSY
+    output reg SHIFT,LOAD,TX_BUSY,
+    output reg [1:0] SEL
 );
 
-    typedef enum {IDLE,START,DATA,PARITY,STOP} States;
+    localparam logic [2:0]  IDLE   = 3'b000,
+                            START  = 3'b001,
+                            DATA   = 3'b010,
+                            PARITY = 3'b011,
+                            STOP   = 3'b100;
 
-    reg [2:0] current_state,next_state;
+    logic [2:0] current_state, next_state;
 
     reg [2:0] count;
 
@@ -23,16 +28,43 @@ module tx_fsm(
         begin
             case(current_state)
 
-                IDLE   : next_state <= (TX_START)? START : IDLE;
-                START  : next_state <= DATA;
-                DATA   : next_state <= (count == 7)? PARITY : DATA;
-                PARITY : next_state <= STOP;
-                STOP   : next_state <= IDLE;
+                IDLE   : begin
+                            next_state <= (TX_START)? START : IDLE;
+                            SEL <= 2'b00;
+                end
+
+                START  : begin
+                            next_state <= DATA;
+                            SEL <= 2'b00;
+                end
+
+                DATA   : begin
+                            next_state <= (count == 7)? PARITY : DATA;
+                            SEL <= 2'b01;
+                end
+
+                PARITY : begin
+                            next_state <= STOP;
+                            SEL <= 2'b10;
+                end
+
+                STOP   : begin
+                            next_state <= IDLE;
+                            SEL <= 2'b11;
+                end
 
             endcase
 
             count <= (current_state == DATA)? count + 1 : 0;
         end
+    end
+
+    always @(negedge BAUD)
+    begin
+        if(current_state == DATA)
+            SHIFT = 0;
+
+         current_state = next_state;
     end
 
     always @(posedge BAUD or posedge RST)
@@ -48,8 +80,6 @@ module tx_fsm(
 
         else if(BAUD)
         begin
-
-            current_state = next_state;
 
             case(current_state)
 
