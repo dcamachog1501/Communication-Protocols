@@ -1,14 +1,14 @@
 module piso_reg(
 
     input [7:0] IN,
-    input SHIFT,RST,LOAD,
+    input SHIFT,RST,LOAD,CLK,
     output reg OUT
 
 );
 
     reg [7:0] TEMP;
 
-    always @(posedge SHIFT or posedge LOAD or posedge RST)
+    always @(posedge CLK)
     begin
         if(RST)
             TEMP<=8'b0;

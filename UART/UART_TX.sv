@@ -18,8 +18,8 @@ module UART_TX(
     assign mux_in[3] = 1;
 
     tx_fsm fsm (.TX_START(TX_START), .RST(RST), .BAUD(BAUD), .SHIFT(shift), .LOAD(load), .SEL(sel), .TX_BUSY(TX_BUSY));
-    parity_gen p_gen (.IN(DATA_IN), .RST(RST), .LOAD(load), .OUT(mux_in[2]));
-    piso_reg piso_reg (.IN(DATA_IN), .SHIFT(shift) , .RST(RST) ,.LOAD(load), .OUT(mux_in[1]));
+  	parity_gen p_gen (.IN(DATA_IN), .RST(RST), .LOAD(load), .OUT(mux_in[2]), .CLK(BAUD));
+    piso_reg piso_reg (.IN(DATA_IN), .SHIFT(shift) , .RST(RST) ,.LOAD(load), .OUT(mux_in[1]), .CLK(BAUD));
     mux_4_to_1 mux (.IN(mux_in), .SEL(sel), .OUT(TX_OUT));
 
 endmodule

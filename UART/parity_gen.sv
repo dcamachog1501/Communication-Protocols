@@ -1,15 +1,15 @@
 module parity_gen(
     input [7:0] IN,
-    input RST,LOAD,
+    input RST,LOAD,CLK,
     output reg OUT
 );
 
-    always @(posedge RST or posedge LOAD)
+  always @(posedge RST, posedge CLK)
     begin
         if(RST)
-            OUT <= 0;
+            OUT = 0;
         
         else if(LOAD)
-            OUT <= ^IN;
+            OUT = ^IN;
     end
 endmodule
