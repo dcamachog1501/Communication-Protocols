@@ -5,7 +5,8 @@ module TX_tb();
     reg tx_start,rst,baud,tx_out,tx_busy;
   	reg [7:0] data_in;
 
-    integer i;
+    int i,count;
+  	event done;
     reg [10:0] received_output;
   	reg [7:0] received_data;
     reg received_parity;
@@ -25,6 +26,7 @@ module TX_tb();
     initial 
     begin
 		baud = 0;
+      	count = 0;
         tx_start = 0;
         data_in = 8'b0;
 
@@ -35,12 +37,12 @@ module TX_tb();
         for(i = 0; i<5; i=i+1)
         begin
 
-            received_output=8'b0;
+            received_output=11'b0;
             data_in = $random();
             tx_start = 1;
-          	@(posedge tx_busy);
-            tx_start = 0;
-          	@(negedge tx_busy);
+          	//@(posedge tx_busy);
+            //tx_start = 0;
+          	@(done);
 
             received_data = received_output[8:1];
             received_parity = received_output[9];
@@ -51,12 +53,14 @@ module TX_tb();
                 $error("TEST FAILED! PARITY MISMATCH -> Expected Parity: %0b, Received Parity: %0b",^data_in,received_parity);
             else if (received_output[0] != 0)
                 $error("TEST FAILED! START BIT MISMATCH -> Expected: 0, Received: %0b",received_output[0]);
-            else if (received_output[11] != 0)
+          	else if (received_output[11] != 1)
                 $error("TEST FAILED! STOP BIT MISMATCH -> Expected: 1, Received: %0b",received_output[11]);
             else
                 $display("TEST PASSED! Expected Output: %0b, Received Output: %0b",data_in,received_data);
             
         end
+      tx_start=0;
+      #200
       $finish();
     end
 
@@ -66,7 +70,16 @@ module TX_tb();
         if(tx_busy)
         begin
           received_output = {tx_out,received_output[10:1]};
+          count++;
         end
-
+      	
+      
+      	if(count == 11)
+        begin
+          
+          ->done;
+          count=0;
+          
+        end
     end
 endmodule

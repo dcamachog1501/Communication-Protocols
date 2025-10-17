@@ -4,13 +4,13 @@ module tx_fsm(
     output reg [1:0] SEL
 );
 
-    localparam logic [2:0]  IDLE   = 3'b000,
+  typedef enum logic [2:0] {IDLE   = 3'b000,
                             START  = 3'b001,
                             DATA   = 3'b010,
                             PARITY = 3'b011,
-                            STOP   = 3'b100;
+                            STOP   = 3'b100} State;
 
-    logic [2:0] current_state, next_state;
+    State current_state, next_state;
 
     reg [2:0] count;
 
@@ -19,9 +19,9 @@ module tx_fsm(
 
         if(RST)
         begin
-            current_state <= IDLE;
-            next_state <= IDLE;
-            count <= 0;
+            current_state = IDLE;
+            next_state = IDLE;
+            count = 0;
         end
 
         else if(BAUD)
@@ -29,33 +29,33 @@ module tx_fsm(
             case(current_state)
 
                 IDLE   : begin
-                            next_state <= (TX_START)? START : IDLE;
-                            SEL <= 2'b00;
+                            next_state = (TX_START)? START : IDLE;
+                            SEL = 2'b00;
                 end
 
                 START  : begin
-                            next_state <= DATA;
-                            SEL <= 2'b00;
+                            next_state = DATA;
+                            SEL = 2'b00;
                 end
 
                 DATA   : begin
-                            next_state <= (count == 7)? PARITY : DATA;
-                            SEL <= 2'b01;
+                            next_state = (count == 7)? PARITY : DATA;
+                            SEL = 2'b01;
                 end
 
                 PARITY : begin
-                            next_state <= STOP;
-                            SEL <= 2'b10;
+                            next_state = STOP;
+                            SEL = 2'b10;
                 end
 
                 STOP   : begin
-                            next_state <= IDLE;
-                            SEL <= 2'b11;
+                  			next_state=(TX_START)? START : IDLE;
+                            SEL = 2'b11;
                 end
 
             endcase
 
-            count <= (current_state == DATA)? count + 1 : 0;
+            count = (current_state == DATA)? count + 1 : 0;
         end
     end
 
