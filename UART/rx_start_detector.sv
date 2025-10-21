@@ -1,17 +1,16 @@
 module start_detector(
 
-    input DATA_IN,CLK,RST,CHECK_START,
+    input DATA_IN,CHECK_START,
     output reg START_DETECTED
 
 );
 
-    always @(posedge CLK, posedge RST)
+  always @(DATA_IN)
     begin
-
-        if(RST || ~ CHECK_START)
-            START_DETECTED = 0;
-        else
-            START_DETECTED = ~DATA_IN;
+      if(CHECK_START)
+        START_DETECTED = ~DATA_IN;
+      else
+        START_DETECTED=0;
     end
     
 endmodule

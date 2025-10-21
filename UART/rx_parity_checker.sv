@@ -13,7 +13,7 @@ module parity_checker(
             PARITY_ERROR = 0;
         
         else if (CHECK_PARITY)
-            PARITY_ERROR = ^(DATA_IN) & PARITY_IN;
+            PARITY_ERROR = ^(DATA_IN) ^ PARITY_IN;
     end
 
 endmodule

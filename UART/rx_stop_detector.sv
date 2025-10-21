@@ -1,18 +1,16 @@
 module stop_detector(
 
-    input DATA_IN,CLK,RST,CHECK_STOP,
+    input DATA_IN,CHECK_STOP,
     output reg STOP_BIT_ERROR
 
 );
 
-    always @(posedge CLK, posedge RST)
+  always @(DATA_IN)
     begin
-
-        if(RST)
-            STOP_BIT_ERROR = 0;
-        else
-            STOP_BIT_ERROR = DATA_IN;
-
+      if(CHECK_STOP)
+        STOP_BIT_ERROR = ~DATA_IN;
+      else
+        STOP_BIT_ERROR=0;
     end
     
 endmodule

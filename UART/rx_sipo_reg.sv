@@ -11,7 +11,7 @@ module sipo_reg(
         if(RST)
             DATA_OUT = 8'b0;
         else if (SHIFT)
-            DATA_OUT = {DATA_OUT,DATA_IN};
+          DATA_OUT = {DATA_IN,DATA_OUT[7:1]};
 
     end
 
