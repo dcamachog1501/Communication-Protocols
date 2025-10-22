@@ -5,7 +5,7 @@ module start_detector(
 
 );
 
-  always @(DATA_IN)
+  always @(*)
     begin
       if(CHECK_START)
         START_DETECTED = ~DATA_IN;

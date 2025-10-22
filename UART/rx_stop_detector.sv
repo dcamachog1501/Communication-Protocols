@@ -5,7 +5,7 @@ module stop_detector(
 
 );
 
-  always @(DATA_IN)
+  always @(*)
     begin
       if(CHECK_STOP)
         STOP_BIT_ERROR = ~DATA_IN;
