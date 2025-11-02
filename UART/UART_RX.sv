@@ -7,24 +7,24 @@
 module UART_RX(
 
     input RST,BAUD,DATA_IN,
-    output STOP_BIT_ERROR,PARITY_ERROR,
+    output STOP_BIT_ERROR,PARITY_ERROR,DONE,
     output [7:0] RX_OUT
 );
-    wire check_start,start_detected,shift,check_stop,check_parity;
+    wire check_start,start_detected,shift,check_stop,check_parity,sample;
   
     start_detector strt_detect(.DATA_IN(DATA_IN),
                                .CHECK_START(check_start),
                                .START_DETECTED(start_detected));
 
     sipo_reg sipo(.DATA_IN(DATA_IN),
-                  .CLK(BAUD),
+                  .CLK(sample),
                   .RST(RST),
                   .SHIFT(shift),
                   .DATA_OUT(RX_OUT));
 
     parity_checker parity_chk(.DATA_IN(RX_OUT),
                               .PARITY_IN(DATA_IN),
-                              .CLK(BAUD),.RST(RST),
+                              .CLK(sample),.RST(RST),
                               .CHECK_PARITY(check_parity),
                               .PARITY_ERROR(PARITY_ERROR));
 
@@ -39,6 +39,8 @@ module UART_RX(
                .SHIFT(shift),
                .CHECK_PARITY(check_parity),
                .CHECK_START(check_start),
-               .CHECK_STOP(check_stop));
+               .CHECK_STOP(check_stop),
+               .SAMPLE(sample),
+               .DONE(DONE));
 
 endmodule

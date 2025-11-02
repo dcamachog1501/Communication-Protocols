@@ -1,6 +1,6 @@
-`include "mux_4_to_1.sv"
-`include "parity_gen.sv"
-`include "piso_reg.sv"
+`include "tx_mux_4_to_1.sv"
+`include "tx_parity_gen.sv"
+`include "tx_piso_reg.sv"
 `include "tx_fsm.sv"
 
 

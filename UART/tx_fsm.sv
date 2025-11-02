@@ -46,7 +46,7 @@ module tx_fsm(
         begin
             SHIFT = 0;
             LOAD = 0;
-            SEL = 2'b00;
+            SEL = 2'b11;
             TX_BUSY = 0;
         end
 
@@ -58,7 +58,7 @@ module tx_fsm(
                 IDLE : begin
                     SHIFT = 0;
                     LOAD = 0;
-                    SEL = 2'b00;
+                    SEL = 2'b11;
                     TX_BUSY = 0;
                     count_en = 0;
                 end

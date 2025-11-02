@@ -1,4 +1,3 @@
-`include "UART_TX.sv"
 
 module TX_tb();
 

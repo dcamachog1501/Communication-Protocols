@@ -1,4 +1,3 @@
-`include "UART_RX.sv"
 
 module RX_tb;
 

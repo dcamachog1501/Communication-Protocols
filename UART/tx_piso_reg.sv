@@ -12,19 +12,20 @@ module piso_reg(
     begin
         if(RST)
         begin
-            TEMP=8'b0;
+          TEMP=8'b0;
       		OUT=0;
         end
       	
         else if (LOAD)
+        begin
           TEMP=IN;
+          OUT= TEMP[0];
+        end
       
         else if(SHIFT)
         begin
-            
-          	OUT= TEMP[0];
             TEMP= TEMP>>1;
-            
+          	OUT= TEMP[0];
         end
     end
 endmodule
